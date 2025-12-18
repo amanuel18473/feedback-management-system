@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState,useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";import {  FileIcon,  UserIcon } from "@/icons";  // adjust icons
+
 import { useSidebar } from "../context/SidebarContext";
 import {
   BoxCubeIcon,
@@ -30,7 +31,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "Feedback-management", path: "/", pro: false }],
   },
   {
     icon: <CalenderIcon />,
@@ -44,6 +45,31 @@ const navItems: NavItem[] = [
     { name: "List", path: "/branch?view=list" },
     { name: "Add/Edit", path: "/branch?view=form" },
   ],
+},
+{
+    icon: <UserIcon />,
+     name: "QR Code",
+    subItems: [
+      { name: "List", path: "/qrcode?view=list" },
+      { name: "Add/Edit", path: "/qrcode?view=form" },
+    ],
+  
+  },
+ {
+  icon: <UserIcon />,
+  name: "Users",
+  subItems: [
+    { name: "List", path: "/users/list" },
+    { name: "Add / Edit", path: "/users/form" },
+  ],
+},
+ {
+  icon: <FileIcon />,
+  name: "Announcement",
+ subItems: [
+  { name: "List", path: "/announcement?view=list" },
+  { name: "Add/Edit", path: "/announcement?view=form" },
+],
 },
 
   {
