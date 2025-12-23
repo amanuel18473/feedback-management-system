@@ -15,6 +15,17 @@ export interface SignInPayload {
   password: string;
 }
 
+// types/user.ts
+
+export interface CreateUserPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  role: string;
+  branch: string;
+  department: string;
+}
+
 export interface SignUpPayload {
   fullName: string;
   email: string;

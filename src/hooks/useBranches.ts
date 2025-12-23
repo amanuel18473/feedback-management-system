@@ -1,70 +1,85 @@
+"use client";
+
+
+import { createBranch, deleteBranch, exportBranches, getBranches, importBranches, updateBranch } from "@/services/branch-service";
+import { Branch, CreateBranchPayload, GetBranchesResponse, UpdateBranchPayload } from "@/types/branch.type";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { BranchPayload, GetBranchesResponse } from "@/types/branch.type";
-import { createBranch, deleteBranch, getAllBranches, getBranchById, updateBranch } from "@/services/branch-service";
 
-/* =========================
-   GET ALL (WITH PARAMS)
-========================= */
-export const useGetAllBranches = (params: {
-  page: number;
-  limit: number;
-  status: string;
-}) =>
-  useQuery<GetBranchesResponse>({
+/* ======================
+   GET BRANCHES (PAGINATION + SEARCH)
+====================== */
+export const useGetBranches = (params?: { page?: number; limit?: number; search?: string }) => {
+  return useQuery<GetBranchesResponse, Error>({
     queryKey: ["branches", params],
-    queryFn: () => getAllBranches(params),
+    queryFn: () => getBranches(params),
   });
+};
 
-/* =========================
-   GET BY ID
-========================= */
-export const useGetBranchById = (id?: string) =>
-  useQuery({
-    queryKey: ["branch", id],
-    queryFn: () => getBranchById(id!),
-    enabled: !!id,
-  });
-
-/* =========================
-   CREATE
-========================= */
+/* ======================
+   CREATE BRANCH
+====================== */
 export const useCreateBranch = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: createBranch,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["branches"] });
-      toast.success("Branch created");
-    },
+  const queryClient = useQueryClient();
+  return useMutation<Branch, Error, CreateBranchPayload>({
+    mutationFn: (data) => createBranch(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["branches"] }),
   });
 };
 
-/* =========================
-   UPDATE
-========================= */
+/* ======================
+   UPDATE BRANCH
+====================== */
 export const useUpdateBranch = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: BranchPayload }) =>
-      updateBranch(id, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["branches"] });
-      toast.success("Branch updated");
-    },
+  const queryClient = useQueryClient();
+  return useMutation<Branch, Error, { id: string; data: UpdateBranchPayload }>({
+    mutationFn: ({ id, data }) => updateBranch(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["branches"] }),
   });
 };
 
-/* =========================
-   DELETE
-========================= */
+/* ======================
+   DELETE BRANCH
+====================== */
 export const useDeleteBranch = () => {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => deleteBranch(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["branches"] }),
+  });
+};
+
+/* ======================
+   IMPORT BRANCHES
+====================== */
+export const useImportBranches = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, File>({
+    mutationFn: (file) => importBranches(file),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["branches"] }),
+  });
+};
+
+/* ======================
+   EXPORT BRANCHES
+====================== */
+export const useExportBranches = () => {
   return useMutation({
-    mutationFn: deleteBranch,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["branches"] });
-      toast.success("Branch deleted");
+    mutationFn: () => exportBranches(),
+  });
+};
+
+/* ======================
+   VIEW BRANCH DETAIL
+====================== */
+export const useGetBranchById = (id: string) => {
+  return useQuery<Branch, Error>({
+    queryKey: ["branch", id],
+    queryFn: async () => {
+      const branches = await getBranches({});
+      const branch = branches.branches.find((b) => b._id === id);
+      if (!branch) throw new Error("Branch not found");
+      return branch;
     },
+    enabled: !!id,
   });
 };

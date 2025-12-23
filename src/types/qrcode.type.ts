@@ -1,22 +1,45 @@
+import { Branch } from "./branch.type";
+
+/* ---------- Main Entity ---------- */
 export interface QrCode {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   type: string;
-  branch: string;
+  branch:string;
   department: string;
-  image?: File | string;
+  status: string;
+  image?: {
+    url: string;
+    publicId: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  qrCodeId: string;
+  slug: string;
 }
 
+/* ---------- Payloads ---------- */
 export interface CreateQrCodePayload {
   name: string;
   description: string;
   type: string;
-  branch: string;
+  branch:string;
   department: string;
   image?: File;
 }
 
+export interface UpdateQrCodePayload {
+  name?: string;
+  description?: string;
+  type?: string;
+  branch?: string;
+  department?: string;
+  status?: string;
+  image?: File | null;
+}
+
+/* ---------- Pagination ---------- */
 export interface Pagination {
   page: number;
   limit: number;
@@ -26,11 +49,13 @@ export interface Pagination {
   hasPrevPage: boolean;
 }
 
+/* ---------- Backend Response ---------- */
 export interface GetQrCodesResponse {
   qrCodes: QrCode[];
   pagination: Pagination;
 }
 
+/* ---------- Query Params ---------- */
 export interface GetQrCodesParams {
   page?: number;
   limit?: number;

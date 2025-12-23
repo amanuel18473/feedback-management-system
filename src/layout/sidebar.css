@@ -1,0 +1,51 @@
+/* Sidebar Navigation Items */
+.menu-item {
+  @apply flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200;
+}
+
+.menu-item-active {
+  @apply bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-200;
+}
+
+.menu-item-inactive {
+  @apply text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-900;
+}
+
+.menu-item-icon-active {
+  @apply text-gray-900 dark:text-gray-200;
+}
+
+.menu-item-icon-inactive {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+.menu-item-text {
+  @apply text-sm font-medium;
+}
+
+/* Dropdown Submenu Items */
+.menu-dropdown-item {
+  @apply block px-3 py-1.5 rounded-md text-sm transition-colors duration-200;
+}
+
+.menu-dropdown-item-active {
+  @apply bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-200;
+}
+
+.menu-dropdown-item-inactive {
+  @apply text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-900;
+}
+
+/* Badges inside dropdown */
+.menu-dropdown-badge {
+  @apply ml-auto px-2 py-0.5 rounded-full text-xs bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200;
+}
+
+/* Optional hover/active helpers */
+.menu-item:hover {
+  @apply bg-gray-50 dark:bg-gray-900;
+}
+
+.menu-dropdown-item:hover {
+  @apply bg-gray-50 dark:bg-gray-900;
+}

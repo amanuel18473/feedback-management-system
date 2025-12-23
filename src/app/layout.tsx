@@ -1,17 +1,19 @@
+// src/app/layout.tsx
 import "./globals.css";
-import { Outfit } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
 
-const outfit = Outfit({ subsets: ["latin"] });
+export const metadata = {
+  title: "Admin",
+  description: "Admin Panel",
+};
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${outfit.className} dark:bg-gray-900`}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body>
+  
+          {children}
+    
       </body>
     </html>
   );

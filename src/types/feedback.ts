@@ -1,16 +1,67 @@
-// types/feedback.type.ts
-
+// Feedback entity
 export interface Feedback {
-  id: string;
-  message: string;
-  category: "Complaints" | "Suggestions" | "Compliments" | "Inquiries";
-  priority: "Low" | "Medium" | "High" | "Urgent";
-  tags?: string[]; // e.g., branch IDs
+  _id: string;
+  feedbackId: string;
+  customer: string;
+  email?: string;
+  phone?: string;
+  comment: string;
+  rating: number;
+  type: string;
+  department: string;
+  branch: {
+    _id: string;
+    name: string;
+  };
+  attachments?: {
+    url: string;
+    fileName: string;
+  }[];
+  status: string; // "pending", "resolved", etc.
+  createdAt: string;
+  updatedAt: string;
+  slug: string; // optional, like Announcement
 }
 
-export interface CreateFeedbackData {
-  message: string;
-  category: Feedback["category"];
-  priority: Feedback["priority"];
-  tags?: string[];
+// Payloads for API
+export interface CreateFeedbackPayload {
+  customer: string;
+  email?: string;
+  phone?: string;
+  comment: string;
+  rating: number;
+  type: string;
+  department: string;
+  branchId: string;
+  status: string;
+  attachments?: File[];
+}
+
+export interface UpdateFeedbackPayload {
+  customer?: string;
+  email?: string;
+  phone?: string;
+  comment?: string;
+  rating?: number;
+  type?: string;
+  department?: string;
+  branchId?: string;
+  status?: string;
+  attachments?: File[] | null;
+}
+
+// Pagination
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+// Backend Response
+export interface GetFeedbackResponse {
+  feedbacks: Feedback[];
+  pagination: Pagination;
 }

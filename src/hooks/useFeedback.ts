@@ -1,100 +1,85 @@
+"use client";
+
+
+import { createFeedback, deleteFeedback, exportFeedbacks, getFeedbacks, importFeedbacks, updateFeedback } from "@/services/feedback-service";
+import { Feedback, CreateFeedbackPayload, GetFeedbackResponse, UpdateFeedbackPayload } from "@/types/feedback";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import type {
-  Feedback,
-  CreateFeedbackData,
-  GetFeedbacksParams,
-  GetFeedbacksResponse,
-  SearchFeedbackParams,
-  FilterFeedbackParams
-} from "@/types/feedback.type";
-import { createFeedback, deleteFeedback, exportFeedbacks, filterFeedbacks, getAllFeedbacks, searchFeedbacks, updateFeedback } from "@/services/feedback-service";
 
-
-/* =========================
-   GET ALL FEEDBACKS
-========================= */
-export const useGetAllFeedbacks = (params: GetFeedbacksParams) =>
-  useQuery<GetFeedbacksResponse>({
+/* ======================
+   GET FEEDBACKS (PAGINATION + SEARCH)
+====================== */
+export const useGetFeedbacks = (params?: { page?: number; limit?: number; search?: string }) => {
+  return useQuery<GetFeedbackResponse, Error>({
     queryKey: ["feedbacks", params],
-    queryFn: () => getAllFeedbacks(params),
+    queryFn: () => getFeedbacks(params),
   });
+};
 
-/* =========================
-   SEARCH FEEDBACKS
-========================= */
-export const useSearchFeedbacks = (params: SearchFeedbackParams) =>
-  useQuery<Feedback[]>({
-    queryKey: ["feedbacks-search", params],
-    queryFn: () => searchFeedbacks(params),
-  });
-
-/* =========================
-   FILTER FEEDBACKS
-========================= */
-export const useFilterFeedbacks = (params: FilterFeedbackParams) =>
-  useQuery<Feedback[]>({
-    queryKey: ["feedbacks-filter", params],
-    queryFn: () => filterFeedbacks(params),
-  });
-
-/* =========================
-   EXPORT FEEDBACKS
-========================= */
-export const useExportFeedbacks = () =>
-  useMutation({
-    mutationFn: exportFeedbacks,
-    onSuccess: (data) => {
-      const url = window.URL.createObjectURL(data);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "feedbacks.csv");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      toast.success("Feedback exported");
-    },
-  });
-
-/* =========================
+/* ======================
    CREATE FEEDBACK
-========================= */
+====================== */
 export const useCreateFeedback = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: createFeedback,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["feedbacks"] });
-      toast.success("Feedback created successfully");
-    },
+  const queryClient = useQueryClient();
+  return useMutation<Feedback, Error, CreateFeedbackPayload>({
+    mutationFn: (data) => createFeedback(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feedbacks"] }),
   });
 };
 
-/* =========================
+/* ======================
    UPDATE FEEDBACK
-========================= */
+====================== */
 export const useUpdateFeedback = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateFeedbackData> }) =>
-      updateFeedback(id, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["feedbacks"] });
-      toast.success("Feedback updated successfully");
-    },
+  const queryClient = useQueryClient();
+  return useMutation<Feedback, Error, { id: string; data: UpdateFeedbackPayload }>({
+    mutationFn: ({ id, data }) => updateFeedback(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feedbacks"] }),
   });
 };
 
-/* =========================
+/* ======================
    DELETE FEEDBACK
-========================= */
+====================== */
 export const useDeleteFeedback = () => {
-  const qc = useQueryClient();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => deleteFeedback(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feedbacks"] }),
+  });
+};
+
+/* ======================
+   IMPORT FEEDBACKS
+====================== */
+export const useImportFeedbacks = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, File>({
+    mutationFn: (file) => importFeedbacks(file),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feedbacks"] }),
+  });
+};
+
+/* ======================
+   EXPORT FEEDBACKS
+====================== */
+export const useExportFeedbacks = () => {
   return useMutation({
-    mutationFn: deleteFeedback,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["feedbacks"] });
-      toast.success("Feedback deleted successfully");
+    mutationFn: () => exportFeedbacks(),
+  });
+};
+
+/* ======================
+   VIEW FEEDBACK DETAIL
+====================== */
+export const useGetFeedbackById = (id: string) => {
+  return useQuery<Feedback, Error>({
+    queryKey: ["feedback", id],
+    queryFn: async () => {
+      const feedbacks = await getFeedbacks({});
+      const feedback = feedbacks.feedbacks.find((f) => f._id === id);
+      if (!feedback) throw new Error("Feedback not found");
+      return feedback;
     },
+    enabled: !!id,
   });
 };
