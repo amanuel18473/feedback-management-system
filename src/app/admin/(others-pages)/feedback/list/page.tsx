@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/ui/car
 import { Button } from "@/components/ui/ui/button";
 import { Input } from "@/components/ui/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/ui/dialog";
-import { Plus, RefreshCcw, Eye, Edit2, Trash2, X } from "lucide-react";
+import { Plus, RefreshCcw, Eye, Edit2, Trash2, X, Search } from "lucide-react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Tooltip } from "@mui/material";
 import { useGetFeedbacks, useDeleteFeedback } from "@/hooks/useFeedback";
@@ -130,24 +130,31 @@ export function FeedbackPageContent() {
           </div>
 
           <div className="flex flex-wrap gap-2 items-center">
-            <div className="relative">
-              <Input
-                className="pl-3 max-w-[200px]"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute right-0 top-0 mt-1 mr-1"
-                  onClick={() => setSearchQuery("")}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
+
+<div className="relative">
+  {/* Search icon */}
+  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+
+  <Input
+    className="pl-8 max-w-[200px]" // add left padding for icon
+    placeholder="Search..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+
+  {/* Clear button */}
+  {searchQuery && (
+    <Button
+      variant="outline"
+      size="icon"
+      className="absolute right-0 top-0 mt-1 mr-1"
+      onClick={() => setSearchQuery("")}
+    >
+      <X className="h-4 w-4" />
+    </Button>
+  )}
+</div>
+
 
             <Button onClick={() => setShowAddDialog(true)} className="h-9 bg-blue-600 text-white hover:bg-blue-700">
               <Plus className="h-4 w-4" />

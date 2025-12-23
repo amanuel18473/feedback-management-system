@@ -207,20 +207,34 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { FileIcon, UserIcon } from "@/icons";
+import { FileIcon, HorizontaLDots, UserIcon } from "@/icons";
+// import {
+//   BoxCubeIcon,
+//   CalenderIcon,
+//   ChevronDownIcon,
+//   GridIcon,
+//   HorizontaLDots,
+//   ListIcon,
+//   PageIcon,
+//   PieChartIcon,
+//   PlugInIcon,
+//   TableIcon,
+//   UserCircleIcon,
+// } from "../icons/index";
+import { QrCode, Lock, Box, Layers } from "lucide-react";
 import {
-  BoxCubeIcon,
-  CalenderIcon,
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
-  UserCircleIcon,
-} from "../icons/index";
+  Grid as GridIcon,
+  Calendar as CalendarIcon,
+  MapPin as MapPinIcon,
+  Users as UsersIcon,
+  Megaphone as MegaphoneIcon,
+  MessageCircle as MessageCircleIcon,
+  UserCircle as UserCircleIcon,
+  FileText as FileTextIcon,
+  Table as TableIcon,
+  PieChart as PieChartIcon
+} from "lucide-react";
+
 import SidebarWidget from "./SidebarWidget";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -236,22 +250,22 @@ const ADMIN_BASE = "/admin";
 // Nav items
 const navItems: NavItem[] = [
   { icon: <GridIcon />, name: "Dashboard", subItems: [{ name: "Feedback Management", path: `${ADMIN_BASE}` }] },
-  { icon: <CalenderIcon />, name: "Calendar", path: `${ADMIN_BASE}/calendar` },
-  { icon: <CalenderIcon />, name: "Branch", subItems: [{ name: "List", path: `${ADMIN_BASE}/branch/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/branch/add` }] },
-  { icon: <UserIcon />, name: "QR Code", subItems: [{ name: "List", path: `${ADMIN_BASE}/qrcode/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/qrcode/add` }] },
-  { icon: <UserIcon />, name: "Users", subItems: [{ name: "List", path: `${ADMIN_BASE}/users/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/users/add` }] },
-  { icon: <FileIcon />, name: "Announcement", subItems: [{ name: "List", path: `${ADMIN_BASE}/announcement/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/announcement/add` }] },
-  { icon: <CalenderIcon />, name: "Feedback", path: `${ADMIN_BASE}/feedback/list` },
+  { icon: <CalendarIcon />, name: "Calendar", path: `${ADMIN_BASE}/calendar` },
+  { icon: <MapPinIcon />, name: "Branch", subItems: [{ name: "List", path: `${ADMIN_BASE}/branch/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/branch/add` }] },
+  { icon: <QrCode />, name: "QR Code", subItems: [{ name: "List", path: `${ADMIN_BASE}/qrcode/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/qrcode/add` }] },
+  { icon: <UsersIcon />, name: "Users", subItems: [{ name: "List", path: `${ADMIN_BASE}/users/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/users/add` }] },
+  { icon: <MegaphoneIcon />, name: "Announcement", subItems: [{ name: "List", path: `${ADMIN_BASE}/announcement/list` }, { name: "Add / Edit", path: `${ADMIN_BASE}/announcement/add` }] },
+  { icon: <MessageCircleIcon />, name: "Feedback", path: `${ADMIN_BASE}/feedback/list` },
   { icon: <UserCircleIcon />, name: "User Profile", path: `${ADMIN_BASE}/profile` },
-  { name: "Forms", icon: <ListIcon />, subItems: [{ name: "Form Elements", path: `${ADMIN_BASE}/form-elements`, pro: false }] },
+  { name: "Forms", icon: <FileTextIcon />, subItems: [{ name: "Form Elements", path: `${ADMIN_BASE}/form-elements`, pro: false }] },
   { name: "Tables", icon: <TableIcon />, subItems: [{ name: "Basic Tables", path: `${ADMIN_BASE}/tables/basic`, pro: false }] },
-  { name: "Pages", icon: <PageIcon />, subItems: [{ name: "Blank Page", path: `${ADMIN_BASE}/blank`, pro: false }, { name: "404 Error", path: `${ADMIN_BASE}/error-404`, pro: false }] },
+  { name: "Pages", icon: <FileIcon />, subItems: [{ name: "Blank Page", path: `${ADMIN_BASE}/blank`, pro: false }, { name: "404 Error", path: `${ADMIN_BASE}/error-404`, pro: false }] },
 ];
 
 const othersItems: NavItem[] = [
   { icon: <PieChartIcon />, name: "Charts", subItems: [{ name: "Line Chart", path: `${ADMIN_BASE}/charts/line`, pro: false }, { name: "Bar Chart", path: `${ADMIN_BASE}/charts/bar`, pro: false }] },
-  { icon: <BoxCubeIcon />, name: "UI Elements", subItems: [{ name: "Alerts", path: `${ADMIN_BASE}/ui/alerts`, pro: false }, { name: "Avatar", path: `${ADMIN_BASE}/ui/avatar`, pro: false }, { name: "Badge", path: `${ADMIN_BASE}/ui/badge`, pro: false }, { name: "Buttons", path: `${ADMIN_BASE}/ui/buttons`, pro: false }, { name: "Images", path: `${ADMIN_BASE}/ui/images`, pro: false }, { name: "Videos", path: `${ADMIN_BASE}/ui/videos`, pro: false }] },
-  { icon: <PlugInIcon />, name: "Authentication", subItems: [{ name: "Sign In", path: `/signin`, pro: false }, { name: "Sign Up", path: `/signup`, pro: false }] },
+  { icon: <Box/>, name: "UI Elements", subItems: [{ name: "Alerts", path: `${ADMIN_BASE}/ui/alerts`, pro: false }, { name: "Avatar", path: `${ADMIN_BASE}/ui/avatar`, pro: false }, { name: "Badge", path: `${ADMIN_BASE}/ui/badge`, pro: false }, { name: "Buttons", path: `${ADMIN_BASE}/ui/buttons`, pro: false }, { name: "Images", path: `${ADMIN_BASE}/ui/images`, pro: false }, { name: "Videos", path: `${ADMIN_BASE}/ui/videos`, pro: false }] },
+  { icon: <Lock/>, name: "Authentication", subItems: [{ name: "Sign In", path: `/signin`, pro: false }, { name: "Sign Up", path: `/signup`, pro: false }] },
 ];
 
 const AppSidebar: React.FC = () => {

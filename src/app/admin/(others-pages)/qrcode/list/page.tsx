@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/ui/dialog";
-import { Plus, Upload, Download, RefreshCcw, Eye, Edit2, Trash2, X } from "lucide-react";
+import { Plus, Upload, Download, RefreshCcw, Eye, Edit2, Trash2, X, Search } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
@@ -196,24 +196,31 @@ export function QrcodesPageContent() {
 
           <div className="flex flex-wrap gap-2 items-center">
             {/* SEARCH */}
-            <div className="relative">
-              <Input
-                className="pl-8 max-w-[200px]"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute right-0 top-0 mt-1 mr-1"
-                  onClick={() => setSearchQuery("")}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
+
+<div className="relative">
+  {/* Search icon */}
+  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+
+  <Input
+    className="pl-8 max-w-[200px]" // add left padding for icon
+    placeholder="Search..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+
+  {/* Clear button */}
+  {searchQuery && (
+    <Button
+      variant="outline"
+      size="icon"
+      className="absolute right-0 top-0 mt-1 mr-1"
+      onClick={() => setSearchQuery("")}
+    >
+      <X className="h-4 w-4" />
+    </Button>
+  )}
+</div>
+
 
             {/* ACTION BUTTONS */}
             <Tooltip title="Add QR Code">
